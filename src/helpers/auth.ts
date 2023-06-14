@@ -14,15 +14,15 @@ export const compare = async (
     return passwordsMatch;
 };
 
-const createJwt = (user: { id: string; username: string }) => {
+export const createJwt = async (user: { id: string; username: string }) => {
     return jwt.sign(
         {
             id: user.id,
-            username: user.username,
+            username: user.username
         },
         process.env.JWT_SECRET || '',
         {
-            expiresIn: '1d',
+            expiresIn: '1d'
         }
     );
 };
@@ -36,7 +36,7 @@ export const protect = (
 
     if (!token) {
         res.status(401).json({
-            message: 'you forgot to pass the authorization token',
+            message: 'you forgot to pass the authorization token'
         });
     }
 

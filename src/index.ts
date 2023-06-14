@@ -4,6 +4,6 @@ import * as dotenv from 'dotenv';
 // load env contents into process
 dotenv.config();
 
-app.listen(3000, () => {
-    console.log('server listening on port 3000');
+app.listen(3001, () => {
+    console.log('server listening on port http://localhost:3001');
 });
