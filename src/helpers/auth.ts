@@ -14,8 +14,8 @@ export const compare = async (
     return passwordsMatch;
 };
 
-export const createJwt = async (user: { id: string; username: string }) => {
-    return jwt.sign(
+export const createJwt = (user: { id: string; username: string }) => {
+    const token = jwt.sign(
         {
             id: user.id,
             username: user.username
@@ -25,6 +25,8 @@ export const createJwt = async (user: { id: string; username: string }) => {
             expiresIn: '1d'
         }
     );
+
+    return token;
 };
 
 export const protect = (

@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { createUser } from '.';
+import { createUser, signIn } from '.';
 import { body } from 'express-validator';
 
 export const userRouter = Router();
 
-userRouter.post(
-    '/user',
-    [
-        body('email').isEmail(),
-        body('password').isString().trim().isLength({
-            min: 5
-        })
-    ],
-    createUser
-);
+const validator = [
+    body('email').isEmail(),
+    body('password').isString().trim().isLength({
+        min: 5
+    })
+];
+
+userRouter.post('/user', validator, createUser);
+
+userRouter.post('/sign-in', validator, signIn);

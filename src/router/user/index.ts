@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../db';
-import { createJwt, encrypt } from '../../helpers/auth';
+import { compare, createJwt, encrypt } from '../../helpers/auth';
 import { Prisma } from '@prisma/client';
 
 export const createUser = async (req: Request, res: Response) => {
@@ -26,6 +26,44 @@ export const createUser = async (req: Request, res: Response) => {
                 return;
             }
         } else if (e instanceof Error) {
+            res.status(500).json({ message: e.message });
+            return;
+        }
+
+        res.status(500).json({ message: 'oh oh' });
+    }
+};
+
+export const signIn = async (req: Request, res: Response) => {
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                email: req.body.email
+            }
+        });
+
+        if (!user) {
+            res.status(404).json({
+                message: `user with email ${req.body.email} was not found.`
+            });
+            return;
+        }
+
+        const passwordsMatch = compare(req.body.password, user.password);
+
+        if (!passwordsMatch) {
+            res.status(500).json({
+                message: 'incorrect password'
+            });
+            return;
+        }
+
+        const token = createJwt({ id: user.id, username: user.email });
+        res.status(200).json({
+            data: token
+        });
+    } catch (e) {
+        if (e instanceof Error) {
             res.status(500).json({ message: e.message });
             return;
         }
