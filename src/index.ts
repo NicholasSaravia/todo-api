@@ -1,12 +1,17 @@
 import app from './server';
 import express from 'express';
 import * as dotenv from 'dotenv';
+import cors from 'cors';
+import morgan from 'morgan';
 
 // load env contents into process
 dotenv.config();
 
 // cors
+app.use(cors());
+
 // logger
+app.use(morgan('dev'));
 
 /**
  * middleware to allow express to interpret
