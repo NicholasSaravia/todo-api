@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import router from './router';
+import { userRouter } from './router/user/router';
+import { protect } from './helpers/auth';
 
 const app = express();
 
@@ -24,10 +26,9 @@ app.use(express.json());
  */
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-    return res.status(200).json({ message: 'hello buddy' });
-});
-
-app.use(router);
+// for sign in / sign up
+app.use(userRouter);
+// for all other routes
+app.use('/api', protect, router);
 
 export default app;

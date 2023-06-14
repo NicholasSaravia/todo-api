@@ -14,7 +14,7 @@ export const createUser = async (req: Request, res: Response) => {
 
         const jwt = await createJwt({
             id: user.id,
-            username: user.email
+            email: user.email
         });
 
         res.status(201).json({ data: jwt });
@@ -58,7 +58,7 @@ export const signIn = async (req: Request, res: Response) => {
             return;
         }
 
-        const token = createJwt({ id: user.id, username: user.email });
+        const token = createJwt({ id: user.id, email: user.email });
         res.status(200).json({
             data: token
         });

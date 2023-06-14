@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { User } from '@prisma/client';
 
 export const encrypt = async (password: string): Promise<string> => {
     return bcrypt.hash(password, 10);
@@ -14,11 +15,11 @@ export const compare = async (
     return passwordsMatch;
 };
 
-export const createJwt = (user: { id: string; username: string }) => {
+export const createJwt = (user: { id: string; email: string }) => {
     const token = jwt.sign(
         {
             id: user.id,
-            username: user.username
+            email: user.email
         },
         process.env.JWT_SECRET || '',
         {
@@ -29,11 +30,7 @@ export const createJwt = (user: { id: string; username: string }) => {
     return token;
 };
 
-export const protect = (
-    req: Request & { user: any },
-    res: Response,
-    next: NextFunction
-) => {
+export const protect = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization || '';
 
     if (!token) {
@@ -44,7 +41,7 @@ export const protect = (
 
     try {
         const user = jwt.verify(token, process.env.JWT_SECRET || '');
-        req.user = user;
+        req.user = user as User;
         next();
     } catch (err) {
         res.status(401).json({ message: 'token is not valid' });

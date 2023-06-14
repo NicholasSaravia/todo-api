@@ -32,5 +32,6 @@ model Todo {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  @@unique([id, userId])
   @@index([userId])
 }
