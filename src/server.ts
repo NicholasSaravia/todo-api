@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { ErrorRequestHandler, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import router from './router';
@@ -30,5 +30,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(userRouter);
 // for all other routes
 app.use('/api', protect, router);
+
+app.use((error: unknown, req: Request, res: Response) => {
+    if (error instanceof Error) {
+        res.status(500).json({ message: `ERROR: ${error.message}` });
+        return;
+    }
+    res.status(500).json({ message: `Oh Oh, my bad` });
+});
 
 export default app;
