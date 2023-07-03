@@ -7,9 +7,12 @@ export const getTodos = async (
     next: NextFunction
 ) => {
     try {
-        const todos = await prisma.todo.findMany({
+        const todos = await prisma.project.findMany({
             where: {
                 userId: req.user.id
+            },
+            include: {
+                todos: true
             }
         });
         res.status(200).json({ data: todos });
