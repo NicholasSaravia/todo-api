@@ -9,7 +9,7 @@ export const getTodos = async (
     try {
         const todos = await prisma.project.findMany({
             where: {
-                userId: req.user.id
+                userId: req.auth.userId
             },
             include: {
                 todos: true
@@ -31,7 +31,7 @@ export const getOneTodo = async (
             where: {
                 id_userId: {
                     id: req.params.id,
-                    userId: req.user.id
+                    userId: req.auth.userId
                 }
             }
         });
@@ -59,7 +59,7 @@ export const createTodo = async (
         const todo = await prisma.todo.create({
             data: {
                 ...req.body,
-                userId: req.user.id
+                userId: req.auth.userId
             }
         });
 
@@ -80,7 +80,7 @@ export const updateTodo = async (
             where: {
                 id_userId: {
                     id: req.params.id,
-                    userId: req.user.id
+                    userId: req.auth.userId
                 }
             }
         });
@@ -100,7 +100,7 @@ export const deleteTodo = async (
             where: {
                 id_userId: {
                     id: req.params.id,
-                    userId: req.user.id
+                    userId: req.auth.userId
                 }
             }
         });
