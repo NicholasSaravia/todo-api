@@ -29,22 +29,3 @@ export const createJwt = (user: { id: string; email: string }) => {
 
     return token;
 };
-
-export const protect = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization || '';
-
-    if (!token) {
-        res.status(401).json({
-            message: 'you forgot to pass the authorization token'
-        });
-    }
-
-    try {
-        const user = jwt.verify(token, process.env.JWT_SECRET || '');
-        req.user = user as User;
-        next();
-    } catch (err) {
-        res.status(401).json({ message: 'token is not valid' });
-        return;
-    }
-};

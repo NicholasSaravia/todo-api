@@ -1,9 +1,9 @@
-import express, { ErrorRequestHandler, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import router from './router';
 import { userRouter } from './router/user/router';
-import { protect } from './helpers/auth';
+import { ClerkExpressRequireAuth } from '@clerk/clerk-sdk-node';
 
 const app = express();
 
@@ -28,8 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // for sign in / sign up
 app.use(userRouter);
-// for all other routes
-app.use('/api', protect, router);
+
+app.use('/api', ClerkExpressRequireAuth(), router);
 
 app.use((error: unknown, req: Request, res: Response) => {
     if (error instanceof Error) {
